@@ -1,12 +1,15 @@
 # main.py
 
-from battle import Hero, generate_enemy, battle
-
+from battle import Hero,start_game,where_to_go_intown,what_to_do
 def main():
-    player = Hero(100, 25, 15)
-    enemy = generate_enemy()
-    print(f"你遇到了一隻 level {enemy.level} 的 {enemy.name}")
-    battle(player, enemy)
+    hero = start_game()
+    while True:
+        path = where_to_go_intown()
+        while True:
+            result = what_to_do(hero, path)
+            if result == "exit":
+                break
+
 
 if __name__ == "__main__":
     main()

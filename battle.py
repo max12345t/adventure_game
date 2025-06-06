@@ -2,14 +2,44 @@
 
 import random
 
-class Hero:
+class Hero:# 定義勇者類別
+    """勇者類別，包含屬性和背包"""
     def __init__(self, health, attack, defense):
         self.health = health
         self.attack = attack
         self.defense = defense
         self.XP = 0
         self.lvl = 1
+        self.Gold = 0
+        
+        self.backpack_weapons = []
+        self.backpack_armor = []
+        self.backpack_loots = []
+        self.backpack_items = []
+        self.backpack = {
+            "weapons": self.backpack_weapons,
+            "armor": self.backpack_armor,
+            "item": self.backpack_items,
+            "loots": self.backpack_loots
+        }
+    def show_backpack_weapons(self):
+        if self.backpack["weapons"]:
+            print(f"武器背包: {', '.join(self.backpack['weapons'])}")
+        else:
+            print("武器背包: 無物品")
+    def show_backpack_armor(self):
+        if self.backpack["armor"]:
+            print(f"護甲背包: {', '.join(self.backpack['armor'])}")
+        else:
+            print("護甲背包: 無物品")
+    def show_backpack_items(self):
+        if self.backpack["item"]:
+            print(f"道具背包: {', '.join(self.backpack['item'])}")
+        else:
+            print("道具背包: 無物品")
 
+
+# 定義敵人類別
 class Enemy:
     def __init__(self, health, attack, defense, level, name):
         self.health = health
@@ -18,13 +48,106 @@ class Enemy:
         self.level = level
         self.name = name
 
-def generate_enemy():
+def generate_enemy_in_cave():
     monster_name = random.choice(["哥布林", "骷髏弓箭手", "史萊姆"])
     level = random.randint(1, 15)
     health = 50 + level * 5
     attack = 20 + level * 3
     defense = 10 + level * 2
     return Enemy(health, attack, defense, level, monster_name)
+def generate_enemy_in_forest():
+    monster_name = random.choice(["狼", "熊", "樹精"])
+    level = random.randint(1, 1)
+    health = 50 + level * 5
+    attack = 20 + level * 3
+    defense = 10 + level * 2
+    return Enemy(health, attack, defense, level, monster_name)
+
+
+#遊戲開始
+def start_game():
+    print("歡迎來到冒險遊戲!")
+    print("你將扮演一位勇者，與各種怪物戰鬥，提升自己的等級和屬性。")
+    print("祝你好運!")
+    hero = Hero(100, 25, 15)
+    return hero
+#選擇路徑
+def where_to_go_intown():
+    print("你正在城鎮中，你可以選擇以下路徑:")
+    print("1. 前往山脈")    
+    print("2. 探索洞穴")
+    choice = input("請選擇路徑(1/2):") 
+    if choice not in ["1", "2"]:
+        print("無效的選擇，請重新選擇。")
+        return where_to_go_intown() 
+    elif choice == "1":
+        print("你選擇了前往山脈。")
+        print("====================================")
+    elif choice == "2":
+        print("你選擇了探索洞穴。")
+        print("====================================")
+    return choice
+    
+def get_item(hero, item):
+    if item == "道具":
+        hero.backpack_items.append("道具")
+        print("你獲得了一個道具，已加入背包。")
+    elif item == "寶箱":
+        hero.backpack_loots.append("寶箱")
+        print("你獲得了一個寶箱，已加入背包。")
+    elif item == "武器":
+        weapon = random.choice(["劍", "斧頭", "弓"])
+        hero.backpack_weapons.append(weapon)
+        print(f"你獲得了一把 {weapon}，已加入背包。")
+
+def what_we_meet(hero, path):  # 新增 hero 參數
+    encounter = random.choice(["enemy", "item", "nothing"])
+    if encounter == "enemy":
+        enemy = generate_enemy_in_cave() if path == "2" else generate_enemy_in_forest()
+        print("===================================")
+        print(f"你遇到了一隻 level {enemy.level} 的 {enemy.name}")
+        return enemy
+    elif encounter == "item":
+        item = random.choice(["道具", "寶箱", "武器"])
+        get_item(hero, item)
+        return item
+    else:
+        print("這裡什麼都沒有，你繼續前進。")
+        return None
+
+    
+#選擇行動
+def what_to_do(hero, path):
+    print("你可以選擇以下行動:")
+    print("1. 查看背包")
+    print("2. 休息")
+    print("3. 繼續冒險")
+    print("4. 離開這裡")
+    choice = input("請選擇行動(1/2/3/4):")
+    if choice == "1":
+        hero.show_backpack_weapons()
+        hero.show_backpack_armor()
+        hero.show_backpack_items()
+    elif choice == "2":
+        print("你休息了一會兒，恢復了部分體力。")
+        hero.health += 20
+        if hero.health > 100:
+            hero.health = 100
+    elif choice == "3":
+        print("你決定繼續冒險。")
+        encounter = what_we_meet(hero,path)
+        if isinstance(encounter, Enemy):
+            battle(hero, encounter)
+        elif isinstance(encounter, str):
+            print(encounter)
+
+    elif choice == "4":
+        print("你決定離開這裡，回到城鎮。")
+        return "exit"
+
+
+
+
 
 def battle(hero, enemy):
     round_num = 1
@@ -85,10 +208,13 @@ def battle(hero, enemy):
         print("===================================")
         if hero.health <= 0:
             print("勇者戰敗")
-            break
+            print("遊戲結束")
+            return 
         elif enemy.health <= 0:
             print(f"勇者戰勝了{enemy.name}")
-            gain_xp = abs(enemy.level - hero.lvl) * 10
+            # 獲得經驗值和升級
+            hero.Gold += enemy.level * 10
+            gain_xp = (abs(enemy.level - hero.lvl) + 1) * 10
             hero.XP += gain_xp
             print(f"獲得經驗值{gain_xp}")
             if hero.XP >= hero.lvl * 100:

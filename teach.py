@@ -6,7 +6,7 @@ class hero:
     self.defense=defense
     self.XP=0
     self.lvl=1
-    self.backpack={"道具":[],"金幣":0,"武器":[],"防具":[]}
+    
 class enemy:
   def __init__(self,health,attack,defense,level,name):
     self.health=health
