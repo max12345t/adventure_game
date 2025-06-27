@@ -99,6 +99,7 @@ while BT.health>0 and enemy1.health>0:
       enemy1.health-=BT_battle_defense-enemy_battle_attack
       print(f"{enemy1.name}受到了反擊傷害{BT_battle_defense-enemy_battle_attack}")
   print("===================================")
+  
   #戰鬥結束
   if BT.health<=0:
       print("勇者戰敗")

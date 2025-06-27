@@ -76,6 +76,7 @@ def where_to_go_intown():
     print("你正在城鎮中，你可以選擇以下路徑:")
     print("1. 前往山脈")    
     print("2. 探索洞穴")
+    print("3. 進入商店")
     choice = input("請選擇路徑(1/2):") 
     if choice not in ["1", "2"]:
         print("無效的選擇，請重新選擇。")
@@ -86,6 +87,11 @@ def where_to_go_intown():
     elif choice == "2":
         print("你選擇了探索洞穴。")
         print("====================================")
+    elif choice == "3":
+        print("你選擇了進入商店。")
+        print("====================================")
+        # 在商店中可以購買物品或武器等
+        # 這裡可以添加商店的功能
     return choice
     
 def get_item(hero, item):
@@ -99,7 +105,42 @@ def get_item(hero, item):
         weapon = random.choice(["劍", "斧頭", "弓"])
         hero.backpack_weapons.append(weapon)
         print(f"你獲得了一把 {weapon}，已加入背包。")
-
+def get_into_shop(hero):
+    print("歡迎來到商店!")
+    print("你可以購買以下物品:")
+    print("1. 武器 (價格: 50 Gold)")
+    print("2. 護甲 (價格: 30 Gold)")
+    print("3. 道具 (價格: 10 Gold)")
+    print("4. 離開商店")
+    
+    while True:
+        choice = input("請選擇要購買的物品(1/2/3/4):")
+        if choice == "1":
+            if hero.Gold >= 50:
+                hero.backpack_weapons.append("武器")
+                hero.Gold -= 50
+                print("你購買了一把武器。")
+            else:
+                print("金幣不足，無法購買武器。")
+        elif choice == "2":
+            if hero.Gold >= 30:
+                hero.backpack_armor.append("護甲")
+                hero.Gold -= 30
+                print("你購買了一件護甲。")
+            else:
+                print("金幣不足，無法購買護甲。")
+        elif choice == "3":
+            if hero.Gold >= 10:
+                hero.backpack_items.append("道具")
+                hero.Gold -= 10
+                print("你購買了一個道具。")
+            else:
+                print("金幣不足，無法購買道具。")
+        elif choice == "4":
+            print("你離開了商店。")
+            return "exit"
+        else:
+            print("無效的選擇，請重新選擇。")
 def what_we_meet(hero, path):  # 新增 hero 參數
     encounter = random.choice(["enemy", "item", "nothing"])
     if encounter == "enemy":
