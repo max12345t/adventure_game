@@ -77,7 +77,7 @@ def where_to_go_intown():
     print("1. 前往山脈")    
     print("2. 探索洞穴")
     print("3. 進入商店")
-    choice = input("請選擇路徑(1/2):") 
+    choice = input("請選擇路徑(1/2/3):") 
     if choice not in ["1", "2", "3"]:
         print("無效的選擇，請重新選擇。")
         return where_to_go_intown() 
