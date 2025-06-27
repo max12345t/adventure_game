@@ -78,7 +78,7 @@ def where_to_go_intown():
     print("2. 探索洞穴")
     print("3. 進入商店")
     choice = input("請選擇路徑(1/2):") 
-    if choice not in ["1", "2"]:
+    if choice not in ["1", "2", "3"]:
         print("無效的選擇，請重新選擇。")
         return where_to_go_intown() 
     elif choice == "1":
@@ -141,6 +141,7 @@ def get_into_shop(hero):
             return "exit"
         else:
             print("無效的選擇，請重新選擇。")
+
 def what_we_meet(hero, path):  # 新增 hero 參數
     encounter = random.choice(["enemy", "item", "nothing"])
     if encounter == "enemy":

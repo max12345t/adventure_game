@@ -1,6 +1,6 @@
 # main.py
 
-from game import Hero,start_game,where_to_go_intown,what_to_do
+from game import Hero,start_game,where_to_go_intown,what_to_do, get_into_shop
 def main():
     hero = start_game()
     while True:
